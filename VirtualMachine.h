@@ -37,5 +37,6 @@ private:
 	bool execReturn();
 	bool execPushaddr();
 	bool execExit();
+	bool execStr();
 	void clear();
 };

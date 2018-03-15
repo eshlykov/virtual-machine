@@ -4,6 +4,7 @@
 #include "Exception.h"
 
 #include <algorithm>
+#include <bitset>
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -27,6 +28,7 @@ void CAssembler::readProgram( const std::string& pathToAssemblerFile )
 	}
 
 	initCode();
+	readStrings();
 	readLabels();
 	readFunctions();
 	setIp();
@@ -46,6 +48,58 @@ void CAssembler::initCode()
 	registers["res"] = registersCount + 1;
 	code[registersCount + 1] = integerShift;
 	current = registersCount + 2;
+
+	commands = {
+		{ "print", std::bind( &CAssembler::doPrint, this ) },
+		{ "read", std::bind( &CAssembler::doRead, this ) },
+		{ "push", std::bind( &CAssembler::doPush, this ) },
+		{ "pop", std::bind( &CAssembler::doPop, this ) },
+		{ "move", std::bind( &CAssembler::doMove, this ) },
+		{ "if", std::bind( &CAssembler::doIf, this ) },
+		{ "call", std::bind( &CAssembler::doCall, this ) },
+		{ "equal", std::bind( &CAssembler::doEqual, this ) },
+		{ "add", std::bind( &CAssembler::doAdd, this ) },
+		{ "subtract", std::bind( &CAssembler::doSubtract, this ) },
+		{ "pushaddr", std::bind( &CAssembler::doPushaddr, this ) },
+		{ "return", std::bind( &CAssembler::doReturn, this ) },
+		{ "exit", std::bind( &CAssembler::doExit, this ) },
+		{ "label", std::bind( &CAssembler::doLabel, this ) },
+		{ "str", std::bind( &CAssembler::doStr, this ) },
+	};
+}
+
+void CAssembler::readStrings()
+{
+	readAndCheckKeyword( "strings" );
+	for ( input >> token; token != "."; input >> token ) {
+		checkStringDoubleDefinition( token );
+		strings[token] = current;
+
+		std::string string;
+		input.get();
+		std::getline( input, string );
+
+		for ( int i = 0; i < string.length(); ++i ) {
+			code[current + i / 4] += static_cast<unsigned>( string[i] ) << ( 24 - 8 * ( i % 4 ) );
+		}
+
+		current += ( string.length() - 1 ) / 4 + 2;
+	}
+}
+
+void CAssembler::readAndCheckKeyword( const std::string keyword )
+{
+	input >> token;
+	if ( token != keyword ) {
+		throw CSyntaxError( "CAssembler::readAndCheckKeyword::SyntaxError - Expected '" + keyword + "', but '" + token + "' found." );
+	}
+}
+
+void CAssembler::checkStringDoubleDefinition( const std::string token ) const
+{
+	if ( strings.find( token ) != strings.end() ) {
+		throw CSyntaxError( "CAssembler::checkFunctionDoubleDefinition::SyntaxError - String '" + token + "' already defined." );
+	}
 }
 
 void CAssembler::readLabels()
@@ -54,15 +108,6 @@ void CAssembler::readLabels()
 	for ( input >> token; token != "."; input >> token ) {
 		checkLabelDoubleDeclaration( token );
 		labels[token] = current++;
-	}
-}
-
-
-void CAssembler::readAndCheckKeyword( const std::string keyword )
-{
-	input >> token;
-	if ( token != keyword ) {
-		throw CSyntaxError( "CAssembler::readAndCheckKeyword::SyntaxError - Expected '" + keyword + "', but '" + token + "' found." );
 	}
 }
 
@@ -94,6 +139,7 @@ void CAssembler::checkFunctionDoubleDefinition( const std::string token ) const
 
 void CAssembler::readFunction( const std::string name )
 {
+	readStrings();
 	readLabels();
 	readFunctions();
 	setFunction( name );
@@ -110,37 +156,10 @@ void CAssembler::readCommands()
 {
 	readAndCheckKeyword( "commands" );
 	for ( input >> token; token != "."; input >> token ) {
-		if ( token == "print" ) {
-			doPrint();
-		} else if ( token == "read" ) {
-			doRead();
-		} else if ( token == "push" ) {
-			doPush();
-		} else if ( token == "pop" ) {
-			doPop();
-		} else if ( token == "move" ) {
-			doMove();
-		} else if ( token == "if" ) {
-			doIf();
-		} else if ( token == "call" ) {
-			doCall();
-		} else if ( token == "equal" ) {
-			doEqual();
-		} else if ( token == "add" ) {
-			doAdd();
-		} else if ( token == "subtract" ) {
-			doSubtract();
-		} else if ( token == "return" ) {
-			doPushaddr();
-		} else if ( token == "pushaddr" ) {
-			doReturn();
-		} else if ( token == "exit" ) {
-			doExit();
-		} else if ( token == "label" ) {
-			doLabel();
-		} else {
+		if ( commands.find( token ) == commands.end() ) {
 			throw CSyntaxError( "CAssembler::readCommands::SyntaxError - Unknown command '" + token + "'." );
 		}
+		commands[token]();
 	}
 }
 
@@ -340,6 +359,22 @@ void CAssembler::checkLabelDoubleDefinition( const std::string token ) const
 {
 	if ( code[labels.at( token )] != 0 ) {
 		throw CSyntaxError( "CAssembler::checkLabelDoubleDefinition::SyntaxError - Label + '" + token + "' already defined." );
+	}
+}
+
+void CAssembler::doStr()
+{
+	input >> token;
+	checkString( token );
+	code[current++] = 13;
+	code[current++] = strings.at( token );
+	code[current++] = 0;
+}
+
+void CAssembler::checkString( const std::string& token ) const
+{
+	if ( strings.find( token ) == strings.end() ) {
+		throw CSyntaxError( "CAssembler::checkFunction::SyntaxError - Unknown string '" + token + "'." );
 	}
 }
 

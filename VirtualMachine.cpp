@@ -42,9 +42,10 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 		std::bind( &CVirtualMachine::execEqual, this ),
 		std::bind( &CVirtualMachine::execAdd, this ),
 		std::bind( &CVirtualMachine::execSubtract, this ),
-		std::bind( &CVirtualMachine::execReturn, this ),
 		std::bind( &CVirtualMachine::execPushaddr, this ),
-		std::bind( &CVirtualMachine::execExit, this )
+		std::bind( &CVirtualMachine::execReturn, this ),
+		std::bind( &CVirtualMachine::execExit, this ),
+		std::bind( &CVirtualMachine::execStr, this ),
 	};
 }
 
@@ -176,6 +177,21 @@ bool CVirtualMachine::execPushaddr()
 bool CVirtualMachine::execExit()
 {
 	return false;
+}
+
+bool CVirtualMachine::execStr()
+{
+	for ( int i = code[code[0] + 1]; ; ++i ) {
+		for ( int j = 24; j >= 0; j -= 8 ) {
+			unsigned char c = ( code[i] >> j ) & 0xFF;
+			if ( c == 0 ) {
+				std::cout << std::endl;
+				code[0] += 3;
+				return true;
+			}
+			std::cout << c;
+		}
+	}
 }
 
 void CVirtualMachine::clear()

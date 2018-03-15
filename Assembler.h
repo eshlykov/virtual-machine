@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <functional>
 #include <string>
 #include <unordered_map>
 
@@ -22,14 +23,18 @@ private:
 	std::string token;
 	unsigned code[memoryLimit];
 	unsigned current = 0;
+	std::unordered_map<std::string, unsigned> strings;
 	std::unordered_map<std::string, unsigned> labels;
 	std::unordered_map<std::string, unsigned> functions;
 	std::unordered_map<std::string, unsigned> registers;
+	std::unordered_map<std::string, std::function<void()>> commands;
 
 	void readProgram( const std::string& pathToAssemblerFile );
 	void initCode();
-	void readLabels();
+	void readStrings();
 	void readAndCheckKeyword( const std::string keyword );
+	void checkStringDoubleDefinition( const std::string token ) const;
+	void readLabels();
 	void checkLabelDoubleDeclaration( const std::string token ) const;
 	void readFunctions();
 	void checkFunctionDoubleDefinition( const std::string token ) const;
@@ -63,6 +68,8 @@ private:
 	void doExit();
 	void doLabel();
 	void checkLabelDoubleDefinition( const std::string token ) const;
+	void doStr();
+	void checkString( const std::string& token ) const;
 	void writeBytes( const std::string& pathToBinaryFile );
 	void setIp();
 	void setStack();
