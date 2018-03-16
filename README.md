@@ -30,7 +30,7 @@
     <программа>
 
 <описание команды> =
-  <print> | <read> | <pop> | <move> | <if> | <call> | <equal> | <add> | <subtract> | <return> | <pushaddr> | <exit> | <label> | <str>
+  <print> | <read> | <push> | <pop> | <move> | <if> | <call> | <equal> | <add> | <subtract> | <return> | <pushaddr> | <exit> | <label> | <str>
 
 <print> = print ( <регистр> | <число> )
 <read> = read
