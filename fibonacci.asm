@@ -1,6 +1,6 @@
 strings
   hello Hello! Which Fibonacci number are you interesetd in?
-  answer Great choyce! The number is
+  answer Great choice! The number is
   goodbye Thank you!
 .
 labels
