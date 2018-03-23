@@ -73,4 +73,5 @@ private:
 	void writeBytes( const std::string& pathToBinaryFile );
 	void setIp();
 	void setStack();
+	void clear();
 };

@@ -18,6 +18,7 @@ void CAssembler::Assembly( const std::string& pathToAssemblerFile, const std::st
 {
 	readProgram( pathToAssemblerFile );
 	writeBytes( pathToBinaryFile );
+	clear();
 }
 
 void CAssembler::readProgram( const std::string& pathToAssemblerFile )
@@ -393,4 +394,19 @@ void CAssembler::setIp()
 void CAssembler::setStack()
 {
 	code[1] = current;
+}
+
+void CAssembler::clear()
+{
+	input.close();
+	output.close();
+	for( int i = 0; i < memoryLimit; ++i ) {
+		code[i] = 0;
+	}
+	current = 0;
+	strings.clear();
+	labels.clear();
+	functions.clear();
+	registers.clear();
+	commands.clear();
 }
