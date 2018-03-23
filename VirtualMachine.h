@@ -21,10 +21,10 @@ private:
 	void init( const std::string& pathToBinaryFile );
 	void run();
 	bool execPrint();
-	unsigned getInteger( unsigned number );
-	bool isInteger( unsigned number );
+	unsigned getInteger( unsigned number ) const;
+	static bool isInteger( unsigned number );
 	bool execRead();
-	unsigned castToCodeData( int number );
+	static unsigned castToCodeData( int number );
 	bool execPush();
 	bool execPop();
 	bool execMove();

@@ -25,8 +25,8 @@ private:
 
 	void init( const std::string& pathToBinaryFile );
 	void decodePrint();
-	std::string getRegisterOrNumber( unsigned value );
-	std::string getRegister( unsigned value );
+	static std::string getRegisterOrNumber( unsigned value );
+	static std::string getRegister( unsigned value );
 	void append( const std::string& string );
 	void decodeRead();
 	void decodePush();
@@ -48,6 +48,6 @@ private:
 	void readFunction();
 	void readCommands();
 	void tryAddLabel();
-	void writeProgram( const std::string& pathToAssemblerFile );
+	void writeProgram( const std::string& pathToAssemblerFile ) const;
 	void clear();
 };

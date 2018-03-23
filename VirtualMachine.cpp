@@ -63,7 +63,7 @@ bool CVirtualMachine::execPrint()
 	return true;
 }
 
-unsigned CVirtualMachine::getInteger( unsigned number )
+unsigned CVirtualMachine::getInteger( unsigned number ) const
 {
 	if( !isInteger( number ) ) {
 		return getInteger( code[number] );

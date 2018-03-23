@@ -257,7 +257,7 @@ void CDisassembler::tryAddLabel()
 	}
 }
 
-void CDisassembler::writeProgram( const std::string & pathToAssemblerFile )
+void CDisassembler::writeProgram( const std::string & pathToAssemblerFile ) const
 {
 	std::ofstream output( pathToAssemblerFile, std::ios::out );
 	output << program;
