@@ -165,7 +165,7 @@ void CAssembler::readCommands()
 		}
 		commands[token]();
 	}
-	code[current++] = 0;
+	code[current++] = integerShift - 1;
 }
 
 void CAssembler::doPrint()

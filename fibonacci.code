@@ -145,7 +145,7 @@
 [139 : 11]         return
 [140 : 0]          
 [141 : 0]          
-[142 : 0]          end of commands block (fibonacci)
+[142 : 2147483647] end of commands block (fibonacci)
 
 [143 : 0]          end of functions block (in main program)
 
@@ -179,6 +179,6 @@
 [171 : 12]         exit
 [172 : 0]          
 [173 : 0]          
-[174 : 0]          end of commands block
+[174 : 2147483647] end of commands block
 
 [175 : 0]          stack
