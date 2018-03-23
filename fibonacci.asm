@@ -50,7 +50,7 @@ functions
       push reg2
       return
     .
-  .
+ .
 commands
   str hello
   read
