@@ -17,6 +17,5 @@ int main( int argc, char** argv )
 
 	int c;
 	std::cin >> c;
-
 	return 0;
 }

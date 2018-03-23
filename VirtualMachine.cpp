@@ -1,5 +1,5 @@
-#include "VirtualMachine.h"
 #include "Exception.h"
+#include "VirtualMachine.h"
 
 #include <experimental/filesystem>
 #include <iostream>
@@ -19,7 +19,7 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 {
 	std::ifstream input( pathToBinaryFile, std::ios::in | std::ios::binary );
 
-	if ( !input.is_open() ) {
+	if( !input.is_open() ) {
 		throw CInvalidFile( "CVirtualMachine::init::InvalidBinary - Cannot open file." );
 	}
 
@@ -27,7 +27,7 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 	unsigned length = bytesCount / 4;
 	code.assign( length, 0 );
 
-	for ( unsigned i = 0; i < length; ++i ) {
+	for( unsigned i = 0; i < length; ++i ) {
 		input.read( reinterpret_cast< char* >( &( code[i] ) ), sizeof( unsigned ) );
 	}
 
@@ -60,7 +60,7 @@ unsigned CVirtualMachine::getLength( std::ifstream& stream )
 void CVirtualMachine::run()
 {
 	do {
-	} while ( commands[code[code[0]]]() );
+	} while( commands[code[code[0]]]() );
 }
 
 bool CVirtualMachine::execPrint()
@@ -72,7 +72,7 @@ bool CVirtualMachine::execPrint()
 
 unsigned CVirtualMachine::getInteger( unsigned number )
 {
-	if ( !isInteger( number ) ) {
+	if( !isInteger( number ) ) {
 		return getInteger( code[number] );
 	}
 	return number - integerShift;
@@ -121,7 +121,7 @@ bool CVirtualMachine::execMove()
 
 bool CVirtualMachine::execIf()
 {
-	if ( getInteger( code[code[0] + 1] ) == 0 ) {
+	if( getInteger( code[code[0] + 1] ) == 0 ) {
 		code[0] += 3;
 	} else {
 		code[0] = code[code[code[0] + 2]];
@@ -153,7 +153,7 @@ bool CVirtualMachine::execSubtract()
 {
 	unsigned minuend = getInteger( code[code[0] + 1] );
 	unsigned subtrahend = getInteger( code[code[0] + 2] );
-	if ( minuend < subtrahend ) {
+	if( minuend < subtrahend ) {
 		throw CInvalidArguments( "CVirtualMachine::execSubtract::CInvalidArguments - Minuend is less than subtrahend." );
 	}
 	code[resIndex] = castToCodeData( minuend - subtrahend );
@@ -181,10 +181,10 @@ bool CVirtualMachine::execExit()
 
 bool CVirtualMachine::execStr()
 {
-	for ( int i = code[code[0] + 1]; ; ++i ) {
-		for ( int j = 24; j >= 0; j -= 8 ) {
+	for( int i = code[code[0] + 1]; ; ++i ) {
+		for( int j = 24; j >= 0; j -= 8 ) {
 			unsigned char c = ( code[i] >> j ) & 0xFF;
-			if ( c == 0 ) {
+			if( c == 0 ) {
 				std::cout << std::endl;
 				code[0] += 3;
 				return true;
