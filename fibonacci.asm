@@ -1,5 +1,5 @@
 strings
-  hello Hello! Which Fibonacci number are you interesetd in?
+  hello Hello! Which Fibonacci number are you interested in?
   answer Great choice! The number is
   goodbye Thank you!
 .

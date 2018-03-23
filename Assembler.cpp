@@ -85,6 +85,7 @@ void CAssembler::readStrings()
 
 		current += ( string.length() - 1 ) / 4 + 2;
 	}
+	code[current++] = 0;
 }
 
 void CAssembler::readAndCheckKeyword( const std::string keyword )
@@ -109,6 +110,7 @@ void CAssembler::readLabels()
 		checkLabelDoubleDeclaration( token );
 		labels[token] = current++;
 	}
+	code[current++] = 0;
 }
 
 
@@ -127,6 +129,7 @@ void CAssembler::readFunctions()
 		functions[token] = current++;
 		readFunction( token );
 	}
+	code[current++] = 0;
 }
 
 
@@ -161,6 +164,7 @@ void CAssembler::readCommands()
 		}
 		commands[token]();
 	}
+	code[current++] = 0;
 }
 
 void CAssembler::doPrint()
