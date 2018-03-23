@@ -19,7 +19,6 @@ private:
 	std::vector<std::function<bool()>> commands;
 
 	void init( const std::string& pathToBinaryFile );
-	unsigned getLength( std::ifstream& stream );
 	void run();
 	bool execPrint();
 	unsigned getInteger( unsigned number );

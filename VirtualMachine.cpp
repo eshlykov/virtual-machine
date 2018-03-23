@@ -50,14 +50,6 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 	};
 }
 
-unsigned CVirtualMachine::getLength( std::ifstream& stream )
-{
-	stream.seekg( 0, std::ios::end );
-	unsigned length = stream.tellg();
-	stream.seekg( 0, std::ios::beg );
-	return length;
-}
-
 void CVirtualMachine::run()
 {
 	do {
