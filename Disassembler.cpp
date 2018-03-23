@@ -56,7 +56,6 @@ void CDisassembler::decodePrint()
 {
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	append( "print " + argument1 + "\n" );
-	current += 3;
 }
 
 std::string CDisassembler::getRegisterOrNumber( unsigned value )
@@ -80,7 +79,7 @@ std::string CDisassembler::getRegister( unsigned value )
 void CDisassembler::append( const std::string& string )
 {
 	for( int i = 0; i < tabsCount; ++i ) {
-		program += "\t";
+		program += "  ";
 	}
 	program += string;
 }
@@ -88,20 +87,17 @@ void CDisassembler::append( const std::string& string )
 void CDisassembler::decodeRead()
 {
 	append( "read\n" );
-	current += 3;
 }
 
 void CDisassembler::decodePush()
 {
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	append( "push " + argument1 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::decodePop()
 {
 	append( "pop\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeMove()
@@ -109,7 +105,6 @@ void CDisassembler::decodeMove()
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	std::string argument2 = getRegister( code[current + 2] );
 	append( "move " + argument1 + " " + argument2 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeIf()
@@ -117,14 +112,12 @@ void CDisassembler::decodeIf()
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	std::string argument2 = "label" + std::to_string( code[current + 2] );
 	append( "if " + argument1 + " " + argument2 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeCall()
 {
-	std::string argument1 = "functuion" + std::to_string( code[current + 2] );
+	std::string argument1 = "function" + std::to_string( code[current + 1] );
 	append( "call " + argument1 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeEqual()
@@ -132,7 +125,6 @@ void CDisassembler::decodeEqual()
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	std::string argument2 = getRegisterOrNumber( code[current + 2] );
 	append( "equal " + argument1 + " " + argument2 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeAdd()
@@ -140,8 +132,6 @@ void CDisassembler::decodeAdd()
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	std::string argument2 = getRegisterOrNumber( code[current + 2] );
 	append( "add " + argument1 + " " + argument2 + "\n" );
-	current += 3;
-	current += 3;
 }
 
 void CDisassembler::decodeSubtract()
@@ -149,33 +139,27 @@ void CDisassembler::decodeSubtract()
 	std::string argument1 = getRegisterOrNumber( code[current + 1] );
 	std::string argument2 = getRegisterOrNumber( code[current + 2] );
 	append( "subtract " + argument1 + " " + argument2 + "\n" );
-	current += 3;
-	current += 3;
 }
 
 void CDisassembler::decodePushaddr()
 {
 	append( "pushaddr\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeReturn()
 {
 	append( "return\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeExit()
 {
 	append( "exit\n" );
-	current += 3;
 }
 
 void CDisassembler::decodeStr()
 {
-	std::string argument1 = "string" + std::to_string( code[current + 2] );
+	std::string argument1 = "string" + std::to_string( code[current + 1] );
 	append( "str " + argument1 + "\n" );
-	current += 3;
 }
 
 void CDisassembler::readBytes()
@@ -204,7 +188,6 @@ void CDisassembler::readStrings()
 			++i;
 		}
 		if( string != "" ) {
-			strings[current] = string;
 			append( "string" + std::to_string( current ) + " " + string + "\n" );
 		}
 		current = i + 1;
@@ -219,7 +202,7 @@ void CDisassembler::readLabels()
 	append( "labels\n" );
 	++tabsCount;
 	while( code[current] != 0 ) {
-		labels.push_back( current );
+		labels[code[current]] = current;
 		append( "label" + std::to_string( current ) + "\n" );
 		++current;
 	}
@@ -234,24 +217,33 @@ void CDisassembler::readFunctions()
 	++tabsCount;
 	while( code[current] != 0 ) {
 		functions.push_back( current );
-		append( "function" + std::to_string( current ) + "\n" );
-		readStrings();
-		readLabels();
-		readFunctions();
-		readCommands();
+		readFunction();
 	}
 	--tabsCount;
 	append( ".\n" );
 	++current;
 }
 
+void CDisassembler::readFunction()
+{
+	append( "function" + std::to_string( current ) + "\n" );
+	++current;
+	++tabsCount;
+	readStrings();
+	readLabels();
+	readFunctions();
+	readCommands();
+	--tabsCount;
+}
+
 void CDisassembler::readCommands()
 {
-	append( "functions\n" );
+	append( "commands\n" );
 	++tabsCount;
 	while( code[current] != integerShift - 1 ) {
 		tryAddLabel();
 		commands[code[current]]();
+		current += 3;
 	}
 	--tabsCount;
 	append( ".\n" );
@@ -260,10 +252,8 @@ void CDisassembler::readCommands()
 
 void CDisassembler::tryAddLabel()
 {
-	for( unsigned index : labels ) {
-		if( index == current ) {
-			append( "label label" + std::to_string( current ) + "\n" );
-		}
+	if( labels.find( current ) != labels.end() ) {
+		append( "label label" + std::to_string( labels[current] ) + "\n" );
 	}
 }
 
@@ -278,7 +268,6 @@ void CDisassembler::clear()
 {
 	code.clear();
 	current = 0;
-	strings.clear();
 	labels.clear();
 	functions.clear();
 	commands.clear();

@@ -1,0 +1,65 @@
+strings
+  string10 Hello! Which Fibonacci number are you interested in?
+  string24 Great choice! The number is
+  string32 Thank you!
+.
+labels
+.
+functions
+  function38
+    strings
+    .
+    labels
+      label40
+    .
+    functions
+    .
+    commands
+      pop
+      move res reg1
+      pop
+      move res reg2
+      push reg1
+      equal reg2 0
+      if res label40
+      equal reg2 1
+      if res label40
+      push reg2
+      subtract reg2 1
+      push res
+      pushaddr
+      call function38
+      pop
+      move res reg3
+      pop
+      subtract res 2
+      push reg3
+      push res
+      pushaddr
+      call function38
+      pop
+      move res reg4
+      pop
+      add reg4 res
+      move res reg5
+      pop
+      push reg5
+      return
+      label label40
+      pop
+      push reg2
+      return
+    .
+.
+commands
+  str string10
+  read
+  push res
+  pushaddr
+  call function38
+  pop
+  str string24
+  print res
+  str string32
+  exit
+.

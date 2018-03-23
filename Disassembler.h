@@ -17,8 +17,7 @@ private:
 	static const unsigned resIndex = 9;
 	std::vector<unsigned> code;
 	unsigned current = 0;
-	std::unordered_map<unsigned, std::string> strings;
-	std::vector<unsigned> labels;
+	std::unordered_map<unsigned, unsigned> labels;
 	std::vector<unsigned> functions;
 	std::vector<std::function<void()>> commands;
 	std::string program = "";
@@ -46,6 +45,7 @@ private:
 	void readStrings();
 	void readLabels();
 	void readFunctions();
+	void readFunction();
 	void readCommands();
 	void tryAddLabel();
 	void writeProgram( const std::string& pathToAssemblerFile );
