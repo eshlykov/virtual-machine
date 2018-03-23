@@ -19,7 +19,6 @@ private:
 	static const unsigned stack = 1;
 	static const unsigned integerShift = 1 << 31;
 	std::ifstream input;
-	std::ofstream output;
 	std::string token;
 	unsigned code[memoryLimit];
 	unsigned current = 0;

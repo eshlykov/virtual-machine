@@ -379,9 +379,9 @@ void CAssembler::checkString( const std::string& token ) const
 	}
 }
 
-void CAssembler::writeBytes( const std::string& pathToBinaryFile )
+void CAssembler::writeBytes( const std::string& pathToBinaryFile ) 
 {
-	output = std::ofstream( pathToBinaryFile, std::ios::out | std::ios::binary );
+	std::ofstream output( pathToBinaryFile, std::ios::out | std::ios::binary );
 	char* c = reinterpret_cast<char*>( code );
 	output.write( c, sizeof( unsigned ) * memoryLimit );
 }
@@ -399,7 +399,6 @@ void CAssembler::setStack()
 void CAssembler::clear()
 {
 	input.close();
-	output.close();
 	for( int i = 0; i < memoryLimit; ++i ) {
 		code[i] = 0;
 	}
