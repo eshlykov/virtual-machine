@@ -45,4 +45,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="fibonacci.asm">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="fibonacci.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="fibonacci.code">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
