@@ -20,7 +20,7 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 	std::ifstream input( pathToBinaryFile, std::ios::in | std::ios::binary );
 
 	if( !input.is_open() ) {
-		throw CInvalidFile( "CVirtualMachine::init::InvalidBinary - Cannot open file." );
+		throw CInvalidFile( "CVirtualMachine::init::InvalidFile - Cannot open file." );
 	}
 
 	unsigned bytesCount = std::experimental::filesystem::file_size( pathToBinaryFile );
