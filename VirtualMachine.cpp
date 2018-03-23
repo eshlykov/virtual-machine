@@ -30,6 +30,7 @@ void CVirtualMachine::init( const std::string& pathToBinaryFile )
 	for( unsigned i = 0; i < length; ++i ) {
 		input.read( reinterpret_cast< char* >( &( code[i] ) ), sizeof( unsigned ) );
 	}
+	input.close();
 
 	commands = {
 		std::bind( &CVirtualMachine::execPrint, this ),
