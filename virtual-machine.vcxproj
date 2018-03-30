@@ -20,9 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{B6FD905E-D4AE-4874-93F6-C257AB7A0B0A}</ProjectGuid>
-    <RootNamespace>vonneumannvm</RootNamespace>
+    <ProjectGuid>{8AEBF3E7-57C1-4A18-9FC4-248E35301761}</ProjectGuid>
+    <RootNamespace>virtualmachine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>virtual-machine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -122,7 +123,7 @@
     <ClCompile Include="Assembler.cpp" />
     <ClCompile Include="Disassembler.cpp" />
     <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="VirtualMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
